@@ -33,11 +33,11 @@ pipeline {
     post {
         always {
             script {
-                if (fileExists("${WORKSPACE}/test_results.xml")) {
-                    archiveArtifacts artifacts: "${WORKSPACE}/test_results.xml", fingerprint: true
+                if (fileExists("test_results.xml")) {
+                    archiveArtifacts artifacts: "test_results.xml", fingerprint: true
                 } 
-                bats.publishResults("${WORKSPACE}/test_results.tap")           
-                email.sendResults("${DEFAULT_RECIPIENTS}")
+                bats.publishResults("test_results.tap")           
+                email.sendResults("\${DEFAULT_RECIPIENTS}")
             }
             deleteDir() 
         }
