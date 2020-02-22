@@ -7,11 +7,11 @@ ARG BATS_TAG
 ARG DOCKER_COMPOSE_TAG
 
 USER root
-RUN apk --no-cache add bash gettext docker coreutils ncurses perl
+RUN apk --no-cache add bash gettext docker coreutils ncurses perl wget
 
 #Install Bats
-# RUN curl https://github.com/bats-core/bats-core/archive/$BATS_TAG.tar.gz | tar xvz \ 
-#   && ./bats-core-master/install.sh /usr/local && rm -rf ./bats-core-master
+RUN wget https://github.com/bats-core/bats-core/archive/$BATS_TAG.tar.gz && tar -zxvf $BATS_TAG.tar.gz \
+  && ./bats-core-*/install.sh /usr/local && rm -rf ./bats-core-*
 
 #Install docker-compose
 RUN curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_TAG/run.sh -o /usr/local/bin/docker-compose \ 
@@ -33,4 +33,4 @@ RUN chmod +x /usr/local/bin/get-plugins.sh && chown jenkins:jenkins /usr/local/b
 #Install Jenkins plugins
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 COPY services/jenkins/resources/plugins.txt /usr/share/jenkins/ref/plugins.txt
-# RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
