@@ -17,24 +17,24 @@ load jenkins_helper
     [ "$?" -eq 0 ]
 }
 
-@test "Docker Images Pulled" {
-    docker-compose pull
-    [ "$?" -eq 0 ]
-}
-
-@test ".env file doesn't exist" {
-    [[ ! -f ${WORKSPACE}/.env ]]
-    [ "$?" -eq 0 ]
-}
-
 @test "docker-compose file exists" {
-    [[ -f ${WORKSPACE}/docker-compose.yml ]]
+    [[ -f "${WORKSPACE}/docker-compose.yml" ]]
     [ "$?" -eq 0 ]
 }
 
 @test "Docker containers are running" {
     count=$(docker ps | wc -l)
     [ "$count" -gt 0 ]
+}
+
+@test "Docker Images Pulled" {
+    docker-compose pull -f "${WORKSPACE}/docker-compose.yml" 
+    [ "$?" -eq 0 ]
+}
+
+@test ".env file doesn't exist" {
+    [[ ! -f "${WORKSPACE}/.env" ]]
+    [ "$?" -eq 0 ]
 }
 
 @test "Tagged Jenkins container is running" {
