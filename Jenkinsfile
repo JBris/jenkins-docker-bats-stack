@@ -1,18 +1,10 @@
 @Library('jenkins-shared-libs-oop')
-import org.jbris.EnvVars
 import org.jbris.Git
-import org.jbris.Hook
 import org.jbris.Email
-import org.jbris.File
-import org.jbris.Template
 import org.jbris.Bats
 
-def envVars = new EnvVars(this)
 def git = new Git(this)
-def hook = new Hook(this)
 def email = new Email(this)
-def file = new File(this)
-def template = new Template(this)
 def bats = new Bats(this)
 
 pipeline {
