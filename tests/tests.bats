@@ -27,12 +27,6 @@ load jenkins_helper
     [ "$count" -gt 0 ]
 }
 
-@test "Docker Images Pulled" {
-    cd "$WORKSPACE"
-    docker-compose pull
-    [ "$?" -eq 0 ]
-}
-
 @test ".env file doesn't exist" {
     [[ ! -f "${WORKSPACE}/.env" ]]
     [ "$?" -eq 0 ]
