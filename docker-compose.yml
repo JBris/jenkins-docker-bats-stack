@@ -35,6 +35,15 @@ services:
     labels:
       - "traefik.http.routers.${PROJECT_NAME}_jenkins.rule=Host(`jenkins.${PROJECT_BASE_URL}`)"
       - "traefik.http.services.${PROJECT_NAME}_jenkins.loadbalancer.server.port=${JENKINS_PORT}"
+ 
+  docker_compose:
+    image: docker/compose:$DOCKER_COMPOSE_TAG
+    container_name: "${PROJECT_NAME}_docker_compose"
+    environment:
+      JENKINS_HOME: $JENKINS_HOME
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/jenkins_home:${JENKINS_HOME}
 
   portainer:
     image: portainer/portainer:$PORTAINER_TAG
