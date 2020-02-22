@@ -1,0 +1,62 @@
+version: "3.5"
+
+services:
+  jenkins:
+    image: jenkins/jenkins:$JENKINS_TAG
+    container_name: "${PROJECT_NAME}_jenkins"
+    build: 
+      dockerfile: Dockerfile
+      context: .
+      args:
+        JENKINS_TAG: $JENKINS_TAG
+        JENKINS_NUM_OF_EXECUTORS: $JENKINS_NUM_OF_EXECUTORS
+        BATS_TAG: $BATS_TAG
+        DOCKER_COMPOSE_TAG: $DOCKER_COMPOSE_TAG
+    stop_grace_period: 60s
+    privileged: true
+    restart: always
+    ports:
+      - ${JENKINS_PORT}:8080
+      - ${JENKINS_SLAVE_AGENT_PORT}:50000
+    environment:
+      JENKINS_HOME: $JENKINS_HOME
+      JAVA_OPTS: $JAVA_OPTS
+      JENKINS_OPTS: $JENKINS_OPTS
+      GITHUB_USERNAME: $GITHUB_USERNAME
+      GITHUB_API_TOKEN: $GITHUB_API_TOKEN
+      BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+      BITBUCKET_API_TOKEN: $BITBUCKET_API_TOKEN
+    volumes:
+      - ./config/jenkins_home:${JENKINS_HOME}
+      - ./services/jenkins:/var/jenkins
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.routers.${PROJECT_NAME}_jenkins.rule=Host(`jenkins.${PROJECT_BASE_URL}`)"
+      - "traefik.http.services.${PROJECT_NAME}_jenkins.loadbalancer.server.port=${JENKINS_PORT}"
+
+  portainer:
+    image: portainer/portainer:$PORTAINER_TAG
+    container_name: "${PROJECT_NAME}_portainer"
+    command: --no-auth -H unix:///var/run/docker.sock
+    restart: always    
+    ports:
+      - ${PORTAINER_PORT}:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.routers.${PROJECT_NAME}_portainer.rule=Host(`portainer.${PROJECT_BASE_URL}`)"
+
+  traefik:
+    image: traefik:$TRAEFIK_TAG
+    container_name: "${PROJECT_NAME}_traefik"
+    command: --api.insecure=true --providers.docker=true
+    restart: always
+    ports:
+      - ${TRAEFIK_PORT}:80
+      - ${TRAEFIK_DASHBOARD_PORT}:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+      name: jenkins_docker_bats_stack
