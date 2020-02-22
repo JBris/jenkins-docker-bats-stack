@@ -15,8 +15,7 @@ pipeline {
             steps {
                 script {
                     sh 'echo "Jenkins Pipeline"'
-                    def commitHash = git.getLatestCommit() 
-                    sh "echo Testing for ${commitHash}"
+                    git.getLatestCommit()
                 }
             }
         }

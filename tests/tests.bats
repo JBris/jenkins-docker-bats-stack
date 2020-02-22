@@ -28,7 +28,8 @@ load jenkins_helper
 }
 
 @test "Docker Images Pulled" {
-    docker-compose pull -f "${WORKSPACE}/docker-compose.yml" 
+    cd "$WORKSPACE"
+    docker-compose pull
     [ "$?" -eq 0 ]
 }
 
