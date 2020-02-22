@@ -21,14 +21,15 @@ pipeline {
             }
         }
 
-      stage('test') {
+        stage('test') {
             steps {
                 script {
                     bats.test("${WORKSPACE}/tests/tests.bats", "${WORKSPACE}/test_results.tap")   
                 }
             }
-      }
-
+        }
+    }
+    
     post {
         always {
             script {
