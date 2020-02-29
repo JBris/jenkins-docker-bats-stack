@@ -24,6 +24,6 @@ A fairly simple [example Jenkins file](Jenkinsfile) has been included. This file
 
 The Jenkins container has access to the Docker socket to facilitate communication with the Docker daemon (note that there are security implications in doing this). Both `Docker` and `docker-compose` are installed during the Jenkins build process, allowing docker commands to be executed within your Jenkins pipelines.
 
-## Bats
+### Bats
 
 The BATS framework has been included for use during unit and integration testing. See the [tests directory](tests) for some example tests that will be executed during the Jenkins pipeline. [tests.bats](tests/tests.bats) contains a battery of simple tests to determine if Docker is correctly installed within the Jenkins container. [jenkins_helper.bash](tests/jenkins_helper.bash) is a helper bash script that can contain any reusable variables or functions that you may wish to include in your tests.
